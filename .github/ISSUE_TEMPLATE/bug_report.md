@@ -1,24 +1,20 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: '[Bug] '
-labels: bug
+about: Create a bug report to help us improve
+title: '[Bug]'
+labels: "\U0001F41E bug"
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Short description
+Provide a short summary on what this bug is about.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## :heavy_check_mark: Expected behaviour
+Provide a clear and concise description of what you expected to happen.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## ⚡ Actual behaviour 
+Describe what is happening instead.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
@@ -36,3 +32,10 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+## :joystick: Steps to reproduce
+Provide a step by step list on how to reproduces the issue
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error 
