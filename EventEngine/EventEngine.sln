@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CampusCommunity.EventEngine.Api", "Microsoft.CampusCommunity.EventEngine.Api\Microsoft.CampusCommunity.EventEngine.Api.csproj", "{9A13269A-E0A9-4E5B-9D57-CD88759E8326}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CampusCommunity.EventEngine.Infrastructure", "Microsoft.CampusCommunity.EventEngine.Infrastructure\Microsoft.CampusCommunity.EventEngine.Infrastructure.csproj", "{8C3CBEDC-8ECA-4EE7-9FE0-F27E6E32AE07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9A13269A-E0A9-4E5B-9D57-CD88759E8326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A13269A-E0A9-4E5B-9D57-CD88759E8326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A13269A-E0A9-4E5B-9D57-CD88759E8326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C3CBEDC-8ECA-4EE7-9FE0-F27E6E32AE07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3CBEDC-8ECA-4EE7-9FE0-F27E6E32AE07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3CBEDC-8ECA-4EE7-9FE0-F27E6E32AE07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3CBEDC-8ECA-4EE7-9FE0-F27E6E32AE07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
