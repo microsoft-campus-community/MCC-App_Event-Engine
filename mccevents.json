@@ -20,7 +20,7 @@
         },
         {
             "name": "requirePhotoAgreement",
-            "type": "Boolean"
+            "type": "String"
         }
     ]
 }
