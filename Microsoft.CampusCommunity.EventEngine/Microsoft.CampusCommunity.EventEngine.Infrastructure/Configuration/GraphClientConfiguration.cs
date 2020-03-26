@@ -8,10 +8,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration
     public class GraphClientConfiguration
     {
         public string ClientId { get; set; }
-
         public string TenantId { get; set; }
         public string Authority => $"https://login.microsoftonline.com/{TenantId}/v2.0";
-        public SecureString AdminPrincipalPassword { get; set; }
+        public string AdminPrincipalPassword { get; set; }
 
         public string AdminPrincipalUsername { get; set; }
 

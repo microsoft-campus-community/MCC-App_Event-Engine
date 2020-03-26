@@ -9,25 +9,29 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.Graph;
+using Microsoft.Extensions.Configuration;
+using Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
     public class V1EventsGetAll
     {
         private IGraphService _graphService;
+        private GraphClientConfiguration _graphClientConfiguration;
 
-        public V1EventsGetAll(IGraphService graphService)
+        public V1EventsGetAll(IGraphService graphService, IOptions<GraphClientConfiguration> graphConfiguration)
         {
             _graphService = graphService;
+            _graphClientConfiguration = graphConfiguration.Value;
         }
 
         [FunctionName("V1EventsGetAll")]
         public async Task<ActionResult<User>> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "v1/events")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
             User user = await _graphService.Client.Me.Request().GetAsync();
-
             return user;
             /*log.LogInformation("C# HTTP trigger function processed a request.");
 

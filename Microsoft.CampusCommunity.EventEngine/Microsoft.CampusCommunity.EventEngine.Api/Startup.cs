@@ -4,6 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.CampusCommunity.EventEngine.Services;
+using System;
+using System.Configuration;
+
+[assembly: FunctionsStartup(typeof(Microsoft.CampusCommunity.EventEngine.Api.Startup))]
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
@@ -11,12 +15,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
     {
         private const string GraphAuthenticationSettingsSectionName = "Graph";
 
-        public Startup(IConfiguration configuration)
+       /* public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }*/
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
@@ -27,12 +31,18 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         
         private void configureGraph(IFunctionsHostBuilder builder)
         {
-            IConfigurationSection graphConfigSection = Configuration.GetSection(GraphAuthenticationSettingsSectionName);
+            builder.Services.AddOptions<GraphClientConfiguration>()
+                .Configure<IConfiguration>((settings, configuration) =>
+                {
+                    configuration.GetSection(GraphAuthenticationSettingsSectionName).Bind(settings);
+                });
+
+          /*  IConfigurationSection graphConfigSection = (IConfigurationSection) ConfigurationManager.GetSection(GraphAuthenticationSettingsSectionName);
             GraphClientConfiguration graphConfig = graphConfigSection.Get<GraphClientConfiguration>();
-            builder.Services.AddSingleton<GraphClientConfiguration>(graphConfig);
+            builder.Services.AddSingleton<GraphClientConfiguration>(graphConfig);*/
 
-
-            builder.Services.AddScoped<IGraphService, GraphService>()
+            builder.Services.AddSingleton<IGraphService, GraphService>();
+            //builder.Services.AddScoped<IGraphService, GraphService>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers;
 using Microsoft.Graph;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.CampusCommunity.EventEngine.Services
 {
@@ -11,9 +12,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
         public GraphServiceClient Client { get; private set; }
 
-        public GraphService(GraphClientConfiguration graphClientConfiguration)
+        public GraphService(IOptions<GraphClientConfiguration> graphClientConfiguration)
         {
-            _graphClientConfiguration = graphClientConfiguration;
+            _graphClientConfiguration = graphClientConfiguration.Value;
             BuildGraphClient();
         }
 

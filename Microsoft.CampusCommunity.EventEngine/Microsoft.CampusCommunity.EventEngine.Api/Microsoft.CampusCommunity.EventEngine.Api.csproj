@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.Graph" Version="3.0.1" />
     <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
