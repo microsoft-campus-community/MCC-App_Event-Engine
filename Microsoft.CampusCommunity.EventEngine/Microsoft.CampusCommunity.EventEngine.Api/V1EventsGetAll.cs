@@ -7,33 +7,28 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net;
-using System.Text;
+using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
+using Microsoft.Graph;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
-    public static class Function1
+    public class V1EventsGetAll
     {
-        [FunctionName("Function1")]
-        public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            [Token(
-                Identity = TokenIdentityMode.UserFromRequest,
-                Resource = "https://graph.microsoft.com",
-                IdentityProvider = "AAD"
-            )] string graphToken,
+        private IGraphService _graphService;
+
+        public V1EventsGetAll(IGraphService graphService)
+        {
+            _graphService = graphService;
+        }
+
+        [FunctionName("V1EventsGetAll")]
+        public async Task<ActionResult<User>> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", graphToken);
-            var me = await client.GetStringAsync("https://graph.microsoft.com/v1.0/me/");
+            User user = await _graphService.Client.Me.Request().GetAsync();
 
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(me, Encoding.UTF8, "application/json")
-            };
+            return user;
             /*log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
