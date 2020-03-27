@@ -31,6 +31,22 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
+            string includePastEventsString = null;
+            Boolean includePastEvents = false;
+
+            if(req.GetQueryParameterDictionary().TryGetValue("includePastEvents", out includePastEventsString)){
+                if(!Boolean.TryParse(includePastEventsString, out includePastEvents))
+                {
+                    includePastEvents = false;
+                }
+            }
+
+
+
+
+
+
+
             User user = await _graphService.Client.Me.Request().GetAsync();
             return user;
             /*log.LogInformation("C# HTTP trigger function processed a request.");
