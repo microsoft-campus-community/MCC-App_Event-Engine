@@ -18,6 +18,25 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             _graphService = graphService;
         }
 
+        public async Task<MCCEvent> CreateEvent(MCCEvent newEvent)
+        {
+            
+           Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync((Event)newEvent);
+            //known issue: https://docs.microsoft.com/en-us/graph/extensibility-overview#schema-extensions need to use PATCH to create schema extension with event
+            return (MCCEvent) await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(newEvent);
+        }
+
+        public async Task<MCCEvent> GetEvent(string eventId)
+        {
+            var query = new List<Option>()
+            {
+                new QueryOption("$select", "ext0bhczrqa_userProfile"),
+            };
+
+            var eventById = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request(query).GetAsync();
+            return (MCCEvent)eventById;
+        }
+
         public async Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents)
         {
             List<MCCEvent> results = new List<MCCEvent>();

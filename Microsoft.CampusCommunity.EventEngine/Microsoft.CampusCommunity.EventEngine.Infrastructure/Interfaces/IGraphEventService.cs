@@ -9,5 +9,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
     public interface IGraphEventService
     {
         Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents);
+
+        Task<MCCEvent> GetEvent(String eventId);
+
+        Task<MCCEvent> CreateEvent(MCCEvent newEvent);
     }
 }

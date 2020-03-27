@@ -12,22 +12,21 @@ using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
     public class V1EventsGetAll
     {
-        private IGraphService _graphService;
-        private GraphClientConfiguration _graphClientConfiguration;
+        private IGraphEventService _graphEventService;
 
-        public V1EventsGetAll(IGraphService graphService, IOptions<GraphClientConfiguration> graphConfiguration)
+        public V1EventsGetAll(IGraphEventService graphEventService)
         {
-            _graphService = graphService;
-            _graphClientConfiguration = graphConfiguration.Value;
+            _graphEventService = graphEventService;
         }
 
         [FunctionName("V1EventsGetAll")]
-        public async Task<ActionResult<User>> Run(
+        public async Task<ActionResult<IEnumerable<Event>>> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
@@ -40,15 +39,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
                     includePastEvents = false;
                 }
             }
+            IEnumerable<Event> events = await _graphEventService.GetEvents(includePastEvents);
+            return new OkObjectResult(events);
 
 
 
 
-
-
-
-            User user = await _graphService.Client.Me.Request().GetAsync();
-            return user;
             /*log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
