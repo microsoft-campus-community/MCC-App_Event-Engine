@@ -19,10 +19,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
     public class V1EventsGetAll
     {
         private IGraphEventService _graphEventService;
+        private GraphClientConfiguration _graphClientConfiguration;
 
-        public V1EventsGetAll(IGraphEventService graphEventService)
+        public V1EventsGetAll(IGraphEventService graphEventService, GraphClientConfiguration graphClientConfiguration)
         {
             _graphEventService = graphEventService;
+            _graphClientConfiguration = graphClientConfiguration;
         }
 
         [FunctionName("V1EventsGetAll")]
@@ -30,6 +32,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
+            log.LogInformation("Hello world");
+            log.LogInformation(_graphClientConfiguration.ClientId);
             string includePastEventsString = null;
             Boolean includePastEvents = false;
 

@@ -29,7 +29,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
             IPublicClientApplication app = PublicClientApplicationBuilder.Create(_graphClientConfiguration.ClientId)
                   .WithAuthority(new Uri(_graphClientConfiguration.Authority))
                   .Build();
-            string[] scopes = new string[] { "user.read" };
+            string[] scopes = new string[] { "Group.ReadWrite.All" };
             var accounts = await app.GetAccountsAsync();
 
             AuthenticationResult result = null;

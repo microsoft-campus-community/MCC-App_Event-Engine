@@ -42,6 +42,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             builder.Services.AddSingleton<GraphClientConfiguration>(graphConfig);*/
 
             builder.Services.AddSingleton<IGraphService, GraphService>();
+            builder.Services.AddSingleton<IGraphEventService, GraphEventService>();
             //builder.Services.AddScoped<IGraphService, GraphService>();
         }
     }
