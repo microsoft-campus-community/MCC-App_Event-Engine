@@ -46,12 +46,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
              GraphServiceClient graphServiceClient = new GraphServiceClient(authProvider);
             Graph.User user = await graphServiceClient.Me.Request().GetAsync();*/
 
-            //TODO: Figure out how to make the password more secure using securestring here is pointless.
-            var securePassword = new SecureString();
-            foreach (char c in _graphClientConfiguration.AdminPrincipalPassword)
-                securePassword.AppendChar(c);
+           
 
-            Graph.User user = await _graphService.Client.Me.Request().WithUsernamePassword(_graphClientConfiguration.AdminPrincipalUsername, securePassword).GetAsync();
+            Graph.User user = await _graphService.Client.Me.Request().GetAsync();
 
             return new OkObjectResult(user);
         }

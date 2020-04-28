@@ -13,6 +13,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
 {
     public class Startup : FunctionsStartup
     {
+        /*
+         * All the configuration settings in host.json or local.settings.json to use for connecting to the graph are under this section name.
+         */
         private const string GraphAuthenticationSettingsSectionName = "Graph";
 
 
@@ -25,19 +28,20 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         
         private void configureGraph(IFunctionsHostBuilder builder)
         {
+            /*
+             * Add the graph configuration as an Option so it can be injected with IOption.
+             */
             builder.Services.AddOptions<GraphClientConfiguration>()
                 .Configure<IConfiguration>((settings, configuration) =>
                 {
                     configuration.GetSection(GraphAuthenticationSettingsSectionName).Bind(settings);
                 });
 
-          /*  IConfigurationSection graphConfigSection = (IConfigurationSection) ConfigurationManager.GetSection(GraphAuthenticationSettingsSectionName);
-            GraphClientConfiguration graphConfig = graphConfigSection.Get<GraphClientConfiguration>();
-            builder.Services.AddSingleton<GraphClientConfiguration>(graphConfig);*/
-
+            /*
+             * Register all the services for dependency injection.
+             */
             builder.Services.AddSingleton<IGraphService, GraphService>();
             builder.Services.AddSingleton<IGraphEventService, GraphEventService>();
-            //builder.Services.AddScoped<IGraphService, GraphService>();
         }
     }
 }

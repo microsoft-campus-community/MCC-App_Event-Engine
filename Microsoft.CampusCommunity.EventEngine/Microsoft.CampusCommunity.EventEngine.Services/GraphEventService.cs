@@ -42,22 +42,27 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             List<MCCEvent> results = new List<MCCEvent>();
             var query = new List<Option>()
             {
-                new QueryOption("$select", "ext0bhczrqa_userProfile"),
+                new QueryOption("$select", "extvmri0qlh_eventEngine"),
             };
+            /* TODO: INvalid filter clause.
             if (!includePastEvents)
             {
                 query.Add(new QueryOption("$filter", "start / dateTime ge " + DateTime.Now.ToString("yyyy-MM-ddThh:mm")));
-            }
+            }*/
             
-            var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(/*query*/).GetAsync();
-            foreach(MCCEvent eventObject in events){
-                Object additionalDataEvent = null;
-                eventObject.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent);
-                eventObject.extvmri0qlh_eventEngine = (IEventSchemaExtension)additionalDataEvent;
-                results.Add(eventObject);
-            }
-            return results;
-            
+            //TODO: How to effectively work with schema extension
+            var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(query).GetAsync();
+
+            foreach(Event eventObject in events){
+                 Object additionalDataEvent = null;
+                 eventObject.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent);
+                 
+                 //eventObject.extvmri0qlh_eventEngine = (IEventSchemaExtension)additionalDataEvent;
+
+
+                 results.Add((MCCEvent)eventObject);
+             }
+             return results;
 
         }
     }
