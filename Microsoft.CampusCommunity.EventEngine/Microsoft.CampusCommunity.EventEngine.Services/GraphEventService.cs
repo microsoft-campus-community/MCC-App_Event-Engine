@@ -49,7 +49,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
                 query.Add(new QueryOption("$filter", "start / dateTime ge " + DateTime.Now.ToString("yyyy-MM-ddThh:mm")));
             }
             
-            var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(query).GetAsync();
+            var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(/*query*/).GetAsync();
             foreach(MCCEvent eventObject in events){
                 Object additionalDataEvent = null;
                 eventObject.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent);

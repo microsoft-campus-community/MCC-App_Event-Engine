@@ -26,10 +26,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
 
         public async Task AuthenticateRequestAsync(HttpRequestMessage request)
         {
+
             IPublicClientApplication app = PublicClientApplicationBuilder.Create(_graphClientConfiguration.ClientId)
+               .WithTenantId(_graphClientConfiguration.TenantId)
                   .WithAuthority(new Uri(_graphClientConfiguration.Authority))
                   .Build();
-            string[] scopes = new string[] { "Group.ReadWrite.All" };
+            string[] scopes = new string[] { "User.Read", "Group.Read.All" };
             var accounts = await app.GetAccountsAsync();
 
             AuthenticationResult result = null;
@@ -46,7 +48,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
                     var securePassword = new SecureString();
                     foreach (char c in _graphClientConfiguration.AdminPrincipalPassword)
                         securePassword.AppendChar(c); 
-
+                    
                     result = await app.AcquireTokenByUsernamePassword(scopes,
                                                                      _graphClientConfiguration.AdminPrincipalUsername,
                                                                       securePassword)
@@ -61,7 +63,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
 
             if(result != null)
             {
-                request.Headers.Add("Authorization", result.CreateAuthorizationHeader());
+                    request.Headers.Add("Authorization", result.CreateAuthorizationHeader());
             }
         }
     }

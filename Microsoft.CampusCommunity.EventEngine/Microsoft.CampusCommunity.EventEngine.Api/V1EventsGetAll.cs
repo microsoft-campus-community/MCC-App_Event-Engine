@@ -13,18 +13,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.Security;
+using Microsoft.Graph.Auth;
+using Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
     public class V1EventsGetAll
     {
         private IGraphEventService _graphEventService;
-        private GraphClientConfiguration _graphClientConfiguration;
+        private IGraphService _graphService;
+        private readonly GraphClientConfiguration _graphClientConfiguration;
 
-        public V1EventsGetAll(IGraphEventService graphEventService, GraphClientConfiguration graphClientConfiguration)
+
+
+        public V1EventsGetAll(IGraphEventService graphEventService, IGraphService graphService, IOptions<GraphClientConfiguration> graphClientConfig)
         {
+            _graphService = graphService;
+            _graphClientConfiguration = graphClientConfig.Value;
             _graphEventService = graphEventService;
-            _graphClientConfiguration = graphClientConfiguration;
         }
 
         [FunctionName("V1EventsGetAll")]
@@ -33,7 +40,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             ILogger log)
         {
             log.LogInformation("Hello world");
-            log.LogInformation(_graphClientConfiguration.ClientId);
             string includePastEventsString = null;
             Boolean includePastEvents = false;
 
@@ -43,11 +49,22 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
                     includePastEvents = false;
                 }
             }
-            IEnumerable<Event> events = await _graphEventService.GetEvents(includePastEvents);
+           /* var authProvider = new AzureFunctionAuthenticationProviderToken(graphToken);
+            GraphServiceClient graphServiceClient = new GraphServiceClient(authProvider);
+            var events = await graphServiceClient.Groups["7a77d007-2cd2-4cb5-bb71-5ff85aa92e82"].Events.Request().GetAsync();*/
+            /*
+           
+            IEnumerable<Event> events = await _graphEventService.GetEvents(includePastEvents);*/
+
+
+             var securePassword = new SecureString();
+             foreach (char c in _graphClientConfiguration.AdminPrincipalPassword)
+                 securePassword.AppendChar(c);
+                
+            var events = await _graphService.Client.Groups["7a77d007-2cd2-4cb5-bb71-5ff85aa92e82"].Events.Request()/*.WithUsernamePassword(_graphClientConfiguration.AdminPrincipalUsername, securePassword)*/.GetAsync();
+           
+            
             return new OkObjectResult(events);
-
-
-
 
             /*log.LogInformation("C# HTTP trigger function processed a request.");
 

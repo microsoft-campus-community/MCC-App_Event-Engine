@@ -15,12 +15,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
     {
         private const string GraphAuthenticationSettingsSectionName = "Graph";
 
-       /* public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }*/
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
