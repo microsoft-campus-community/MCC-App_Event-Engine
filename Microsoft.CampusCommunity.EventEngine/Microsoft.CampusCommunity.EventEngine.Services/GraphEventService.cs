@@ -30,11 +30,11 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
         {
             var query = new List<Option>()
             {
-                new QueryOption("$select", "ext0bhczrqa_userProfile"),
+                new QueryOption("$select", "extvmri0qlh_eventEngine"),
             };
 
             var eventById = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request(query).GetAsync();
-            return (MCCEvent)eventById;
+            return new MCCEvent(eventById);
         }
 
         public async Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents)
@@ -44,23 +44,16 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             {
                 new QueryOption("$select", "extvmri0qlh_eventEngine"),
             };
-            /* TODO: INvalid filter clause.
             if (!includePastEvents)
             {
-                query.Add(new QueryOption("$filter", "start / dateTime ge " + DateTime.Now.ToString("yyyy-MM-ddThh:mm")));
-            }*/
+                query.Add(new QueryOption("$filter", "start/dateTime ge '" + DateTime.Now.ToString("yyyy-MM-ddThh:mm") + "'"));
+            }
             
             //TODO: How to effectively work with schema extension
             var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(query).GetAsync();
 
             foreach(Event eventObject in events){
-                 Object additionalDataEvent = null;
-                 eventObject.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent);
-                 
-                 //eventObject.extvmri0qlh_eventEngine = (IEventSchemaExtension)additionalDataEvent;
-
-
-                 results.Add((MCCEvent)eventObject);
+                 results.Add(new MCCEvent(eventObject));
              }
              return results;
 
