@@ -10,6 +10,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
     {
         Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents);
 
+        void DeleteEvent(string eventId);
+
         Task<MCCEvent> GetEvent(String eventId);
 
         Task<MCCEvent> CreateEvent(MCCEvent newEvent);

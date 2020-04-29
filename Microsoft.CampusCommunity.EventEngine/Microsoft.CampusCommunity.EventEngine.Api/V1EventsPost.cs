@@ -29,7 +29,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var inputEvent = JsonConvert.DeserializeObject<MCCEvent>(requestBody);
             MCCEvent createdEvent = await _graphEventService.CreateEvent(inputEvent);
-            return new Microsoft.AspNetCore.Mvc.CreatedResult(new Uri($"{req.Path}/{createdEvent.Id}"), createdEvent);
+            Uri uri = new Uri($"{req.Path}/{createdEvent.Id}");
+            return new Microsoft.AspNetCore.Mvc.CreatedResult(uri, createdEvent);
         }
 
     }

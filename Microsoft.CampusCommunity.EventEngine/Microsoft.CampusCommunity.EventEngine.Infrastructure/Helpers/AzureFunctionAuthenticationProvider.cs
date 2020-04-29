@@ -31,7 +31,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
                .WithTenantId(_graphClientConfiguration.TenantId)
                   .WithAuthority(new Uri(_graphClientConfiguration.Authority))
                   .Build();
-            string[] scopes = new string[] { "User.Read", "Group.Read.All" };
+            string[] scopes = new string[] { "Group.ReadWrite.All" };
             var accounts = await app.GetAccountsAsync();
 
             AuthenticationResult result = null;

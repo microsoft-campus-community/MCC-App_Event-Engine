@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Models;
 using Microsoft.Graph;
+using Newtonsoft.Json;
 
 namespace Microsoft.CampusCommunity.EventEngine.Services
 {
@@ -20,10 +21,34 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
         public async Task<MCCEvent> CreateEvent(MCCEvent newEvent)
         {
-            
-           Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync((Event)newEvent);
+            Event toCreate = newEvent.toEvent();
+            Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(toCreate);
+            Event onlyExtensionDataEvent = new Event();
+            onlyExtensionDataEvent.AdditionalData = new Dictionary<string, object>();
+            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine", newEvent.Extvmri0qlh_eventEngine);
+            Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
+            newEvent.fromEvent(mccEvent);
+            /*
+            Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent.toEvent());
+            Event onlyExtensionDataEvent = new Event();
+            onlyExtensionDataEvent.AdditionalData = new Dictionary<String, object>();
+            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine" ,newEvent.Extvmri0qlh_eventEngine);
             //known issue: https://docs.microsoft.com/en-us/graph/extensibility-overview#schema-extensions need to use PATCH to create schema extension with event
-            return (MCCEvent) await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(newEvent);
+
+            Console.WriteLine(JsonConvert.SerializeObject(onlyExtensionDataEvent));
+
+            Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
+            newEvent.fromEvent(mccEvent);
+            
+    */
+
+            return newEvent;
+
+        }
+
+        public async void DeleteEvent(string eventId)
+        {
+          await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request().DeleteAsync();
         }
 
         public async Task<MCCEvent> GetEvent(string eventId)
@@ -34,7 +59,14 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             };
 
             var eventById = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request(query).GetAsync();
-            return new MCCEvent(eventById);
+            if(eventById != null)
+            {
+                return new MCCEvent(eventById);
+            } else
+            {
+                throw new NullReferenceException();
+            }
+            
         }
 
         public async Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents)
@@ -54,8 +86,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
             foreach(Event eventObject in events){
                  results.Add(new MCCEvent(eventObject));
-             }
-             return results;
+            }
+            return results;
 
         }
     }

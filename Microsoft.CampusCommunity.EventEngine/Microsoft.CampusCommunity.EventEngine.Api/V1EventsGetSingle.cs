@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Models;
+using System.Web.Http;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
@@ -28,7 +29,17 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             ILogger log,
             String eventId)
         {
-            return new OkObjectResult(_graphEventService.GetEvent(eventId));
+            try
+            {
+                 return new OkObjectResult(await _graphEventService.GetEvent(eventId));
+            } catch(NullReferenceException ex)
+            {
+                return new NotFoundObjectResult(eventId);
+            } catch(Exception ex)
+            {
+                log.LogError(ex, "Exception occured while executing v1/events/{eventId}.", eventId);
+                return new InternalServerErrorResult();
+            }
             
         }
     }
