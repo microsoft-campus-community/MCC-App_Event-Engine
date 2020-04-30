@@ -32,11 +32,23 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             try
             {
                  return new OkObjectResult(await _graphEventService.GetEvent(eventId));
-            } catch(NullReferenceException ex)
+            } catch(NullReferenceException)
             {
                 return new NotFoundObjectResult(eventId);
-            } catch(Exception ex)
+            } catch(Microsoft.Graph.ServiceException ex)
             {
+                log.LogError(ex, "Microsoft Graph exception occured while executing v1/events/{eventId}.", eventId);
+                if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundObjectResult(eventId);
+                } else
+                {
+                    return new ExceptionResult(ex, false);
+                }
+            } 
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.GetType());
                 log.LogError(ex, "Exception occured while executing v1/events/{eventId}.", eventId);
                 return new InternalServerErrorResult();
             }

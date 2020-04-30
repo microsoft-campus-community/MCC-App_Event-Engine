@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.CampusCommunity.EventEngine.Infrastructure.Models;
+using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
@@ -28,9 +31,27 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var inputEvent = JsonConvert.DeserializeObject<MCCEvent>(requestBody);
-            MCCEvent createdEvent = await _graphEventService.CreateEvent(inputEvent);
-            Uri uri = new Uri($"{req.Path}/{createdEvent.Id}");
-            return new Microsoft.AspNetCore.Mvc.CreatedResult(uri, createdEvent);
+            try
+            {
+                MCCEvent createdEvent = await _graphEventService.CreateEvent(inputEvent);
+                if (createdEvent.Id != null)
+                {
+                    Uri uriToEvent = new Uri($"{req.Path}/{createdEvent.Id}");
+                    return new Microsoft.AspNetCore.Mvc.CreatedResult(uriToEvent, createdEvent);
+                } else
+                {
+                    return new BadRequestObjectResult(inputEvent);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                log.LogError(ex, "Exception occured while executing POST v1/events with event {event}.", JsonConvert.SerializeObject(inputEvent));
+                return new InternalServerErrorResult();
+                
+            }
+
         }
 
     }

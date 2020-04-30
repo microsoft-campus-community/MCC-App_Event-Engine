@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.Graph;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
 {
@@ -11,8 +12,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
     {
 
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "extvmri0qlh_eventEngine", Required = Newtonsoft.Json.Required.Default)]
-        public EventSchemaExtension Extvmri0qlh_eventEngine { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "mccSpecificEventData", Required = Newtonsoft.Json.Required.Default)]
+        public IEventSchemaExtension Extvmri0qlh_eventEngine { get; set; }
 
        
 
@@ -83,8 +84,10 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
             Object additionalDataEvent = null;
             if (wrappedEvent.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent))
             {
-                Console.WriteLine(JsonConvert.SerializeObject(additionalDataEvent));
-                this.Extvmri0qlh_eventEngine = (EventSchemaExtension)additionalDataEvent;
+                if(additionalDataEvent is JObject)
+                {
+                    this.Extvmri0qlh_eventEngine = ((JObject)additionalDataEvent).ToObject<EventSchemaExtension>();
+                }
             }
             else
             {

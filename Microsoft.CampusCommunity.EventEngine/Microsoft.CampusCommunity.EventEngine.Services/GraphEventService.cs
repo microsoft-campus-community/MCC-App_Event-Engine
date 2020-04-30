@@ -27,7 +27,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             onlyExtensionDataEvent.AdditionalData = new Dictionary<string, object>();
             onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine", newEvent.Extvmri0qlh_eventEngine);
             Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
-            newEvent.fromEvent(mccEvent);
+            newEvent.Id = mccEvent.Id;
             /*
             Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent.toEvent());
             Event onlyExtensionDataEvent = new Event();
