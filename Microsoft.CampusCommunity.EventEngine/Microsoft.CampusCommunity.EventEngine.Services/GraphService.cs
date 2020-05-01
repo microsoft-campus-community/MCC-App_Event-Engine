@@ -5,7 +5,6 @@ using Microsoft.Graph;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using System;
-using Microsoft.Graph;
 using Microsoft.Graph.Auth;
 
 namespace Microsoft.CampusCommunity.EventEngine.Services
@@ -13,7 +12,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
     public class GraphService : IGraphService
     {
         private readonly GraphClientConfiguration _graphClientConfiguration;
-       private IConfidentialClientApplication _msalClient;
 
         public GraphServiceClient Client { get; private set; }
 
@@ -23,9 +21,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             BuildGraphClient();
         }
 
+        /// <summary>
+        /// Create a new MS Graph client with username/password based on configuration file.
+        /// </summary>
         private void BuildGraphClient()
         {
-           Client = new GraphServiceClient(new AzureFunctionAuthenticationProvider(_graphClientConfiguration));
+            Client = new GraphServiceClient(new AzureFunctionAuthenticationProvider(_graphClientConfiguration));
         }
 
     }

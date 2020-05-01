@@ -5,6 +5,24 @@ using System.Text;
 
 namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration
 {
+    /// <summary>
+    /// Configuration to create a connection to MS Graph.
+    /// For development this is best added as a "Graph" section in local.settings.json.
+    /// <example>
+    /// For example (local.settings.json):
+    /// <code>
+    /// {
+    ///     "IsEncrypted": false,
+    ///     "Values": {
+    ///         "Graph:TenantId": [your tenant id],
+    ///         "Graph:ClientId": [client id of your registered AAD application],
+    ///         "Graph:AdminPrincipalUsername": [your username],
+    ///         "Graph:AdminPrincipalPassword": [your password]
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
     public class GraphClientConfiguration
     {
         public string ClientId { get; set; }

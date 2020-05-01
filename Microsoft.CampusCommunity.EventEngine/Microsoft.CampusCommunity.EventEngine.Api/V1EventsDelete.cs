@@ -21,12 +21,11 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         }
 
         [FunctionName("V1EventsDelete")]
-        public async Task<IActionResult> Run(
+        public IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/events/{eventId}")] HttpRequest req,
             ILogger log,
             String eventId)
         {
-
             _graphEventService.DeleteEvent(eventId);
             return new OkResult();
         }

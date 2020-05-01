@@ -57,7 +57,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
                                                                       securePassword)
                                        .ExecuteAsync();
                 }
-                catch (MsalException ex)
+                catch (MsalException)
                 {
 
                     // See details below
