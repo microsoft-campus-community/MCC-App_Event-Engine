@@ -11,15 +11,104 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
     public partial class MCCEvent : Event
     {
 
+        [JsonIgnore]
+        public bool SerializeMccEventSpecificData {get; set;} = true;
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "mccSpecificEventData", Required = Newtonsoft.Json.Required.Default)]
-        public IEventSchemaExtension Extvmri0qlh_eventEngine { get; set; }
+        [JsonIgnore]
+        public bool SerializeEventSchemaExtension { get; set; } = false;
 
-       
+
+        public bool ShouldSerializeEventSchemaExtensionData()
+        {
+            // don't serialize the Extvmri0qlh_eventEngine data property if the event is to be exposed to the Graph
+            Console.WriteLine("should serialize eventEngine:" + SerializeEventSchemaExtension);
+            return SerializeEventSchemaExtension;
+        }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "extvmri0qlh_eventEngine", Required = Newtonsoft.Json.Required.Default)]
+        public EventSchemaExtension EventSchemaExtensionData { get; set; } = new EventSchemaExtension();
+
+        public bool ShouldSerializeReadableId()
+        {
+            Console.WriteLine("ShouldSerializeReadableId:" + SerializeMccEventSpecificData);
+
+            // don't serialize the additional data property if the event is to be exposed to the API
+            return SerializeMccEventSpecificData;
+        }
+        public bool ShouldSerializePlanningStatus()
+        {
+            // don't serialize the additional data property if the event is to be exposed to the API
+            return SerializeMccEventSpecificData;
+        }
+        public bool ShouldSerializeTitleImageUrl()
+        {
+            // don't serialize the additional data property if the event is to be exposed to the API
+            return SerializeMccEventSpecificData;
+        }
+        public bool ShouldSerializeRequirePhotoAgreement()
+        {
+            // don't serialize the additional data property if the event is to be exposed to the API
+            return SerializeMccEventSpecificData;
+        }
+        public bool ShouldSerializeSupportRequestId()
+        {
+            // don't serialize the additional data property if the event is to be exposed to the API
+            return SerializeMccEventSpecificData;
+        }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "readableId", Required = Newtonsoft.Json.Required.Default)]
+        String ReadableId { get => EventSchemaExtensionData.ReadableId; set => EventSchemaExtensionData.ReadableId = value; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "planningStatus", Required = Newtonsoft.Json.Required.Default)]
+        String PlanningStatus { get => EventSchemaExtensionData.PlanningStatus; set => EventSchemaExtensionData.PlanningStatus = value; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "titleImageUrl", Required = Newtonsoft.Json.Required.Default)]
+        String TitleImageUrl { get => EventSchemaExtensionData.TitleImageUrl; set => EventSchemaExtensionData.TitleImageUrl = value; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "requirePhotoAgreement", Required = Newtonsoft.Json.Required.Default)]
+        Boolean RequirePhotoAgreement {
+            get {
+                Boolean result = false;
+                if(Boolean.TryParse(EventSchemaExtensionData.RequirePhotoAgreement,out result))
+                {
+                    return result;
+                } else
+                {
+                    return true;
+                }
+            }
+            set => EventSchemaExtensionData.RequirePhotoAgreement = value.ToString(); 
+        }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "supportRequestId", Required = Newtonsoft.Json.Required.Default)]
+        String SupportRequestId { get => EventSchemaExtensionData.SupportRequestId; set => EventSchemaExtensionData.SupportRequestId = value; }
+
+        
+
+
+      /*  public new IDictionary<string, object> AdditionalData { 
+            get
+            {
+                if (ShouldSerializeAdditionalData())
+                {
+                    if (EventSchemaExtensionData != null)
+                    {
+                        if (base.AdditionalData == null)
+                        {
+                            base.AdditionalData = new Dictionary<string, object>();
+                        }
+
+                        base.AdditionalData["extvmri0qlh_eventEngine"] = EventSchemaExtensionData;
+
+                    }
+                    return base.AdditionalData;
+                } else
+                {
+                    return null;
+                }
+                
+            }
+            set => base.AdditionalData = value;
+        }*/
 
         public MCCEvent(): base()
         {
-            Extvmri0qlh_eventEngine = null;
         }
 
         public MCCEvent(Event wrappedEvent)
@@ -81,18 +170,23 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
 
         public void fromEvent(Event wrappedEvent)
         {
-            Object additionalDataEvent = null;
-            if (wrappedEvent.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent))
+            if(wrappedEvent.AdditionalData != null)
             {
-                if(additionalDataEvent is JObject)
+                Object additionalDataEvent = null;
+                if (wrappedEvent.AdditionalData.TryGetValue("extvmri0qlh_eventEngine", out additionalDataEvent))
                 {
-                    this.Extvmri0qlh_eventEngine = ((JObject)additionalDataEvent).ToObject<EventSchemaExtension>();
+                    wrappedEvent.AdditionalData.Remove("extvmri0qlh_eventEngine");
+                    if(additionalDataEvent is JObject)
+                    {
+                        this.EventSchemaExtensionData = ((JObject)additionalDataEvent).ToObject<EventSchemaExtension>();
+                    }
+                }
+                else
+                {
+                    this.EventSchemaExtensionData = new EventSchemaExtension();
                 }
             }
-            else
-            {
-                this.Extvmri0qlh_eventEngine = null;
-            }
+            
 
 
             this.AdditionalData = wrappedEvent.AdditionalData;

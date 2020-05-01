@@ -13,6 +13,8 @@ using System.Web.Http;
 using System.Net;
 using System.Net.Http;
 
+using System.Reflection;
+
 namespace Microsoft.CampusCommunity.EventEngine.Api
 {
     public class V1EventsPost
@@ -31,12 +33,14 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var inputEvent = JsonConvert.DeserializeObject<MCCEvent>(requestBody);
+
+            
             try
             {
                 MCCEvent createdEvent = await _graphEventService.CreateEvent(inputEvent);
                 if (createdEvent.Id != null)
                 {
-                    Uri uriToEvent = new Uri($"{req.Path}/{createdEvent.Id}");
+                    Uri uriToEvent = new Uri($"{req.Path}/{createdEvent.Id}", UriKind.Relative);
                     return new Microsoft.AspNetCore.Mvc.CreatedResult(uriToEvent, createdEvent);
                 } else
                 {

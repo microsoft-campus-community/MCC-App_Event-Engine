@@ -21,13 +21,17 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
         public async Task<MCCEvent> CreateEvent(MCCEvent newEvent)
         {
-            Event toCreate = newEvent.toEvent();
-            Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(toCreate);
+            newEvent.SerializeMccEventSpecificData = false;
+            newEvent.SerializeEventSchemaExtension = false;
+
+            Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent);
+
             Event onlyExtensionDataEvent = new Event();
             onlyExtensionDataEvent.AdditionalData = new Dictionary<string, object>();
-            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine", newEvent.Extvmri0qlh_eventEngine);
+            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine", newEvent.EventSchemaExtensionData);
             Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
-            newEvent.Id = mccEvent.Id;
+            newEvent.SerializeMccEventSpecificData = true;
+            newEvent.Id = createdEvent.Id;
             /*
             Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent.toEvent());
             Event onlyExtensionDataEvent = new Event();
