@@ -1,4 +1,5 @@
 ﻿using Microsoft.CampusCommunity.EventEngine.Infrastructure.Models;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
         Task<MCCEvent> GetEvent(String eventId);
 
         Task<MCCEvent> CreateEvent(MCCEvent newEvent);
+
+        Task<MCCEvent> UpdateEvent(string eventId, MCCEvent eventWithChangedPropertiesOnly);
+
     }
 }

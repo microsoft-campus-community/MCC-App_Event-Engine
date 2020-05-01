@@ -25,13 +25,20 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             newEvent.SerializeEventSchemaExtension = false;
 
             Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent);
+            if(newEvent.EventSchemaExtensionData != null)
+            {
+                newEvent.SerializeEventSchemaExtension = true;
+                return await this.UpdateEvent(createdEvent.Id, newEvent);
 
-            Event onlyExtensionDataEvent = new Event();
-            onlyExtensionDataEvent.AdditionalData = new Dictionary<string, object>();
-            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine", newEvent.EventSchemaExtensionData);
-            Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
-            newEvent.SerializeMccEventSpecificData = true;
-            newEvent.Id = createdEvent.Id;
+            } else
+            {
+                newEvent.Id = createdEvent.Id;
+                return newEvent;
+            }
+
+            /* Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
+             newEvent.SerializeMccEventSpecificData = true;
+             newEvent.Id = createdEvent.Id;*/
             /*
             Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent.toEvent());
             Event onlyExtensionDataEvent = new Event();
@@ -46,7 +53,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             
     */
 
-            return newEvent;
+            // return newEvent;
 
         }
 
@@ -71,6 +78,21 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
                 throw new NullReferenceException();
             }
             
+        }
+
+        public async Task<MCCEvent> UpdateEvent(string eventId, MCCEvent eventWithChangedPropertiesOnly)
+        {
+            Event toPatch;
+            if(eventWithChangedPropertiesOnly.SerializeEventSchemaExtension && eventWithChangedPropertiesOnly.EventSchemaExtensionData != null)
+            {
+                toPatch = new Event();
+                toPatch.AdditionalData = new Dictionary<string, object>();
+                toPatch.AdditionalData.Add("extvmri0qlh_eventEngine", eventWithChangedPropertiesOnly.EventSchemaExtensionData);
+            }else
+            {
+                toPatch = eventWithChangedPropertiesOnly.toEvent();
+            }
+            return new MCCEvent(await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request().UpdateAsync(toPatch));
         }
 
         public async Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents)

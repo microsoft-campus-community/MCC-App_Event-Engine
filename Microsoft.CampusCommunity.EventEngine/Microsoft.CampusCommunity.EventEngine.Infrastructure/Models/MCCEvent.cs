@@ -21,16 +21,14 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
         public bool ShouldSerializeEventSchemaExtensionData()
         {
             // don't serialize the Extvmri0qlh_eventEngine data property if the event is to be exposed to the Graph
-            Console.WriteLine("should serialize eventEngine:" + SerializeEventSchemaExtension);
-            return SerializeEventSchemaExtension;
+           return SerializeEventSchemaExtension;
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "extvmri0qlh_eventEngine", Required = Newtonsoft.Json.Required.Default)]
-        public EventSchemaExtension EventSchemaExtensionData { get; set; } = new EventSchemaExtension();
+        public EventSchemaExtension EventSchemaExtensionData { get; set; }
 
         public bool ShouldSerializeReadableId()
         {
-            Console.WriteLine("ShouldSerializeReadableId:" + SerializeMccEventSpecificData);
 
             // don't serialize the additional data property if the event is to be exposed to the API
             return SerializeMccEventSpecificData;
@@ -57,27 +55,68 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "readableId", Required = Newtonsoft.Json.Required.Default)]
-        String ReadableId { get => EventSchemaExtensionData.ReadableId; set => EventSchemaExtensionData.ReadableId = value; }
+        String ReadableId {
+            get => EventSchemaExtensionData?.ReadableId;
+            set {
+                if (EventSchemaExtensionData == null)
+                {
+                    EventSchemaExtensionData = new EventSchemaExtension();
+                }
+                EventSchemaExtensionData.ReadableId = value;
+            }  
+        }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "planningStatus", Required = Newtonsoft.Json.Required.Default)]
-        String PlanningStatus { get => EventSchemaExtensionData.PlanningStatus; set => EventSchemaExtensionData.PlanningStatus = value; }
+        String PlanningStatus { 
+            get => EventSchemaExtensionData?.PlanningStatus;
+            set
+            {
+                if (EventSchemaExtensionData == null)
+                {
+                    EventSchemaExtensionData = new EventSchemaExtension();
+                }
+                EventSchemaExtensionData.PlanningStatus = value;
+            }
+        }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "titleImageUrl", Required = Newtonsoft.Json.Required.Default)]
-        String TitleImageUrl { get => EventSchemaExtensionData.TitleImageUrl; set => EventSchemaExtensionData.TitleImageUrl = value; }
+        String TitleImageUrl { 
+            get => EventSchemaExtensionData?.TitleImageUrl;
+            set
+            {
+                if (EventSchemaExtensionData == null)
+                {
+                    EventSchemaExtensionData = new EventSchemaExtension();
+                }
+                EventSchemaExtensionData.TitleImageUrl = value;
+            }
+        }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "requirePhotoAgreement", Required = Newtonsoft.Json.Required.Default)]
         Boolean RequirePhotoAgreement {
             get {
                 Boolean result = false;
-                if(Boolean.TryParse(EventSchemaExtensionData.RequirePhotoAgreement,out result))
-                {
-                    return result;
-                } else
-                {
-                    return true;
-                }
+                Boolean.TryParse(EventSchemaExtensionData?.RequirePhotoAgreement, out result);
+                return result;
             }
-            set => EventSchemaExtensionData.RequirePhotoAgreement = value.ToString(); 
+            set
+            {
+                if (EventSchemaExtensionData == null)
+                {
+                    EventSchemaExtensionData = new EventSchemaExtension();
+                }
+                EventSchemaExtensionData.RequirePhotoAgreement = value.ToString();
+            }
         }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "supportRequestId", Required = Newtonsoft.Json.Required.Default)]
-        String SupportRequestId { get => EventSchemaExtensionData.SupportRequestId; set => EventSchemaExtensionData.SupportRequestId = value; }
+        String SupportRequestId { 
+            get => EventSchemaExtensionData?.SupportRequestId;
+            set
+            {
+                if (EventSchemaExtensionData == null)
+                {
+                    EventSchemaExtensionData = new EventSchemaExtension();
+                }
+                EventSchemaExtensionData.SupportRequestId = value;
+            }
+        }
 
         
 
@@ -183,7 +222,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
                 }
                 else
                 {
-                    this.EventSchemaExtensionData = new EventSchemaExtension();
+                    this.EventSchemaExtensionData = null;
                 }
             }
             
