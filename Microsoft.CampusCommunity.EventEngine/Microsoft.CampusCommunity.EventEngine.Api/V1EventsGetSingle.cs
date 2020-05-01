@@ -48,7 +48,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             } 
             catch(Exception ex)
             {
-                Console.WriteLine(ex.GetType());
                 log.LogError(ex, "Exception occured while executing v1/events/{eventId}.", eventId);
                 return new InternalServerErrorResult();
             }

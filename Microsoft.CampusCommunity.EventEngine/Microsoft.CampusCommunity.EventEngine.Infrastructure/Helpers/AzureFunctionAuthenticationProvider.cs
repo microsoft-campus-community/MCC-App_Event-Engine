@@ -12,6 +12,9 @@ using System.Security;
 
 namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
 {
+    /// <summary>
+    /// A custom IAuthenticationProvider to authenticate against the MS Graph based on the username/password flow with the admin principle.
+    /// </summary>
     public class AzureFunctionAuthenticationProvider : IAuthenticationProvider
     {
         private readonly GraphClientConfiguration _graphClientConfiguration;
@@ -56,7 +59,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Helpers
                 }
                 catch (MsalException ex)
                 {
-                    Console.WriteLine(ex.Message);
+
                     // See details below
                 }
             }

@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 
 namespace Microsoft.CampusCommunity.EventEngine.Services
 {
+    /// <summary>
+    /// This service provides basic CRUD operations for events stored in MS Graph.
+    /// </summary>
     public class GraphEventService : IGraphEventService
     {
         private static readonly string EVENTGROUPID = "7a77d007-2cd2-4cb5-bb71-5ff85aa92e82";
@@ -67,13 +70,14 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             Event toPatch;
             if(eventWithChangedPropertiesOnly.SerializeEventSchemaExtension && eventWithChangedPropertiesOnly.EventSchemaExtensionData != null)
             {
+                //Schema extension properties need to be updated wihtout changing anything else.
                 toPatch = new Event();
                 toPatch.AdditionalData = new Dictionary<string, object>();
                 toPatch.AdditionalData.Add("extvmri0qlh_eventEngine", eventWithChangedPropertiesOnly.EventSchemaExtensionData);
-            }else
-            {
-                toPatch = eventWithChangedPropertiesOnly.toEvent();
+                await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request().UpdateAsync(toPatch);
             }
+            //Update all properties except the schema extension.
+            toPatch = eventWithChangedPropertiesOnly.toEvent();
             return new MCCEvent(await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[eventId].Request().UpdateAsync(toPatch));
         }
 
@@ -89,7 +93,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
                 query.Add(new QueryOption("$filter", "start/dateTime ge '" + DateTime.Now.ToString("yyyy-MM-ddThh:mm") + "'"));
             }
             
-            //TODO: How to effectively work with schema extension
             var events = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request(query).GetAsync();
 
             foreach(Event eventObject in events){
