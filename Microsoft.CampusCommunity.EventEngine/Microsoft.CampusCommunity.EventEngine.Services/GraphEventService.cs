@@ -36,24 +36,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
                 return newEvent;
             }
 
-            /* Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
-             newEvent.SerializeMccEventSpecificData = true;
-             newEvent.Id = createdEvent.Id;*/
-            /*
-            Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent.toEvent());
-            Event onlyExtensionDataEvent = new Event();
-            onlyExtensionDataEvent.AdditionalData = new Dictionary<String, object>();
-            onlyExtensionDataEvent.AdditionalData.Add("extvmri0qlh_eventEngine" ,newEvent.Extvmri0qlh_eventEngine);
-            //known issue: https://docs.microsoft.com/en-us/graph/extensibility-overview#schema-extensions need to use PATCH to create schema extension with event
-
-            Console.WriteLine(JsonConvert.SerializeObject(onlyExtensionDataEvent));
-
-            Event mccEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events[createdEvent.Id].Request().UpdateAsync(onlyExtensionDataEvent);
-            newEvent.fromEvent(mccEvent);
-            
-    */
-
-            // return newEvent;
 
         }
 
