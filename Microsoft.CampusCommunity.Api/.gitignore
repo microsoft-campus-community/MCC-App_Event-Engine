@@ -1,2 +1,5 @@
 # local app settings file
 appsettings.Development.json
+
+# Azure Functions localsettings file
+local.settings.json
