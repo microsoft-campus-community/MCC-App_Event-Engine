@@ -32,22 +32,44 @@ namespace Microsoft.CampusCommunity.Api.Controllers
         }
 
         /// <summary>
-        /// Get all MCC users. This will only return users where the "location" tag is not empty.
+        /// Get all MCC events.
         /// Requirement: <see cref="PolicyNames.Community"/>
         /// </summary>
-        /// <param name="scope">User scope</param>
-        /// <returns>A user</returns>
+        /// <param name="includePastEvents">If true returns past events. If false returns only future events. Default is false.</param>
+        /// <returns>Enumerable events</returns>
         /// <response code="200">Request successful</response>
         /// <response code="400">Product has missing/invalid values</response>
         /// <response code="500">Internal Server Error</response>
         [HttpGet]
-        //[Authorize(Policy = PolicyNames.Community)]
-        public async Task<ActionResult<IEnumerable<Microsoft.CampusCommunity.Infrastructure.Entities.Dto.SimpleEvent>>> Get(
+        [Authorize(Policy = PolicyNames.Community)]
+        public async Task<ActionResult<IEnumerable<Microsoft.CampusCommunity.Infrastructure.Entities.Dto.SimpleEvent>>> GetAll(
             [FromQuery(Name = "includePastEvents")] Boolean includePastEvents = false)
         {
             IEnumerable<MCCEvent> events = await _graphEventService.GetEvents(includePastEvents);
             
             var simpleEvents = events.Select(e => new Microsoft.CampusCommunity.Infrastructure.Entities.Dto.SimpleEvent() { Subject = e.Subject, BodyPreview = e.BodyPreview});
+
+            return new OkObjectResult(simpleEvents);
+        }
+
+
+        /// <summary>
+        /// Get a single MCC event.
+        /// Requirement: <see cref="PolicyNames.Community"/>
+        /// </summary>
+        /// <param name="includePastEvents">If true returns past events. If false returns only future events. Default is false.</param>
+        /// <returns>An event</returns>
+        /// <response code="200">Request successful</response>
+        /// <response code="400">Product has missing/invalid values</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpGet()]
+        [Authorize(Policy = PolicyNames.Community)]
+        public async Task<ActionResult<IEnumerable<Microsoft.CampusCommunity.Infrastructure.Entities.Dto.SimpleEvent>>> Get(
+            [FromQuery(Name = "includePastEvents")] Boolean includePastEvents = false)
+        {
+            IEnumerable<MCCEvent> events = await _graphEventService.GetEvents(includePastEvents);
+
+            var simpleEvents = events.Select(e => new Microsoft.CampusCommunity.Infrastructure.Entities.Dto.SimpleEvent() { Subject = e.Subject, BodyPreview = e.BodyPreview });
 
             return new OkObjectResult(simpleEvents);
         }
