@@ -1,0 +1,26 @@
+{
+    "id":"campus-community_mccevents",
+    "description": "An schema extension for Outlook events to dynamically build an event page",
+    "owner": "afb5a4f1-86df-4a57-9415-2a6bff08f04e",
+    "targetTypes": [
+        "Event"
+    ],
+    "properties": [
+        {
+            "name": "planningStatus",
+            "type": "String"
+        },
+        {
+            "name": "titleImageUrl",
+            "type": "String"
+        },
+        {
+            "name": "supportRequestId",
+            "type": "String"
+        },
+        {
+            "name": "requirePhotoAgreement",
+            "type": "String"
+        }
+    ]
+}
