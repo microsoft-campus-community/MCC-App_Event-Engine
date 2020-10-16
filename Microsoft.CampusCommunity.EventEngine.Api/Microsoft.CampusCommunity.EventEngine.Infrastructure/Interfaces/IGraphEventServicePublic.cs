@@ -14,6 +14,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
         /// </summary>
         /// <param name="includePastEvents">Whether or not to fetch events that started in the past.</param>
         /// <returns>All MCC events that fulfill the filters.</returns>
-        Task<IEnumerable<PublicMCCEvent>> GetPublicEvents(Boolean includePastEvents);
+        Task<IEnumerable<PublicMCCEventLite>> GetPublicEvents(Boolean includePastEvents);
+
+
+        Task<PublicMCCEvent> GetPublicEvent(string eventId);
     }
 }

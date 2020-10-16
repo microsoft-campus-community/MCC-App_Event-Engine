@@ -17,17 +17,25 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             _graphEventService = graphEventService;
         }
 
-        public async Task<IEnumerable<PublicMCCEvent>> GetPublicEvents(bool includePastEvents)
+        public async Task<IEnumerable<PublicMCCEventLite>> GetPublicEvents(bool includePastEvents)
         {
             IEnumerable<MCCEvent> events = await _graphEventService.GetEvents(includePastEvents);
-            List<PublicMCCEvent> publicEvents = new List<PublicMCCEvent>();
+            List<PublicMCCEventLite> publicEvents = new List<PublicMCCEventLite>();
             foreach (var item in events)
             {
-                PublicMCCEvent currentEvent = new PublicMCCEvent();
+                PublicMCCEventLite currentEvent = new PublicMCCEventLite();
                 currentEvent.fromMCCEvent(item);
                 publicEvents.Add(currentEvent);
             }
             return publicEvents;
+        }
+
+        public async Task<PublicMCCEvent> GetPublicEvent(string eventId)
+        {
+            MCCEvent mccEvent = await _graphEventService.GetEvent(eventId);
+            PublicMCCEvent publicEvent = new PublicMCCEvent();
+            publicEvent.fromMCCEvent(mccEvent);
+            return publicEvent;
         }
     }
 }
