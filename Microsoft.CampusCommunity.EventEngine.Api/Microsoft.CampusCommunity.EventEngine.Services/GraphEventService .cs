@@ -22,10 +22,21 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
             _graphService = graphService;
         }
 
-        public async Task<MCCEvent> CreateEvent(MCCEvent newEvent)
+        public async Task<MCCEvent> CreateEvent(IEvent newEvent)
         {
             newEvent.SerializeMccEventSpecificData = false;
             newEvent.SerializeEventSchemaExtension = false;
+
+            var graphEvent = new Event()
+            {
+                Subject = newEvent.Subject,
+                Body = new ItemBody() {
+                    Content = newEvent.Body
+                },
+                BodyPreview = newEvent.BodyPreview,
+
+
+            }
 
             Event createdEvent = await _graphService.Client.Groups[GraphEventService.EVENTGROUPID].Events.Request().AddAsync(newEvent);
             if (newEvent.EventSchemaExtensionData != null)

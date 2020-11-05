@@ -37,7 +37,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
         /// </summary>
         /// <param name="newEvent">The event to create.</param>
         /// <returns>The event that was created.</returns>
-        Task<MCCEvent> CreateEvent(MCCEvent newEvent);
+        Task<MCCEvent> CreateEvent(IEvent newEvent);
 
         /// <summary>
         /// Update properties of an existing MCC event.
