@@ -1,0 +1,311 @@
+swagger: "2.0"
+info:
+  description: "This is the api for the Microsoft Campus Community Event Engine microservice."
+  version: "1.0.0"
+  title: "MCC Event Engine"
+host: "petstore.swagger.io"
+basePath: "/v1"
+schemes:
+- "https"
+paths:
+  /public/events:
+    get:
+      tags:
+      - "public"
+      - "event"
+      summary: "Get public information for all events"
+      operationId: "publicGetAllEvents"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CommastoEvent"
+  /public/events/{eventId}:
+    get:
+      tags:
+      - "public"
+      - "event"
+      summary: "Find public information for event by ID"
+      description: "Returns a single event"
+      operationId: "publicGetEventById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "eventId"
+        in: "path"
+        description: "ID of event to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CommastoEvent"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Event not found"
+  /public/events/{eventId}/heroimage:
+    get:
+      tags:
+      - "public"
+      - "event"
+      - "hero image"
+      summary: "Get hero image for event by ID"
+      description: "Returns a hero image"
+      operationId: "publicGetEventById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "eventId"
+        in: "path"
+        description: "ID of event to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CommastoEvent"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Event not found"
+  /heroimages/templates:
+    get:
+      tags:
+        - "hero image"
+      summary: "Get all hero image templates"
+      description: ""
+      operationId: "getHeroImageTemplates"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CommastoEvent"
+  /events:
+    post:
+      tags:
+      - "event"
+      summary: "Create a new event"
+      description: ""
+      operationId: "createEvent"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Event object to create"
+        required: true
+        schema:
+          $ref: "#/definitions/CommastoEvent"
+      responses:
+        "405":
+          description: "Invalid input"
+    get:
+      tags:
+      - "event"
+      summary: "Get all events"
+      operationId: "getAllEvents"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CommastoEvent"
+  /events/{eventId}:
+    get:
+      tags:
+      - "event"
+      summary: "Find event by ID"
+      description: "Returns a single event"
+      operationId: "getEventById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "eventId"
+        in: "path"
+        description: "ID of event to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CommastoEvent"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Event not found"
+    put:
+      tags:
+      - "event"
+      summary: "Updates an event"
+      description: ""
+      operationId: "updateEvent"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "eventId"
+        in: "path"
+        description: "ID of the event to be update"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated event object"
+        required: true
+        schema:
+          $ref: "#/definitions/CommastoEvent"
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      tags:
+      - "event"
+      summary: "Deletes an event"
+      description: ""
+      operationId: "deleteEvent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "eventId"
+        in: "path"
+        description: "Event id to delete"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Event not found"
+definitions:
+  CommastoEvent:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      shortDescription:
+        type: "string"
+      description:
+        type: "string"
+      highlightQuote:
+        type: "string"
+      isOnlineMeeting:
+        type: "boolean"
+        default: false
+      locations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Location"
+      isAllDay:
+        type: "boolean"
+        default: false
+      start:
+        $ref: "#/definitions/DateTimeTimeZone"
+      originalEndTimeZone:
+        type: "string"
+      originalStartTimeZone:
+        type: "string"
+      end:
+        $ref: "#/definitions/DateTimeTimeZone"
+      audience:
+        $ref: "#/definitions/Audience"
+      campus:
+        type: "string"
+      heroImage:
+        $ref: "#/definitions/HeroImage"
+  Location:
+    type: "object"
+    properties:
+      address:
+        $ref: "#/definitions/PhysicalAddress"
+      coordinates:
+        $ref: "#/definitions/OutlookGeoCoordinates"
+      displayName:
+        type: "string"
+      locationEmailAddress:
+        type: "string"
+      locationType:
+        $ref: "#/definitions/LocationType"
+      locationUri:
+        type: "string"
+  PhysicalAddress:
+    type: "object"
+    properties:
+      city:
+        type: "string"
+      countryOrRegion:
+        type: "string"
+      postalCode:
+        type: "string"
+      state:
+        type: "string"
+      street:
+        type: "string"
+  OutlookGeoCoordinates:
+    type: "object"
+    properties:
+      accuracy:
+        type: "number"
+        format: "double"
+      altitude:
+        type: "number"
+        format: "double"
+      altitudeAccuracy:
+        type: "number"
+        format: "double"
+      latitude:
+        type: "number"
+        format: "double"
+      longitude:
+        type: "number"
+        format: "double"
+  DateTimeTimeZone:
+    type: "object"
+    properties:
+      dateTime:
+        type: "string"
+      timeZone:
+        type: "string"
+  LocationType:
+    type: "string"
+    enum:
+    - "Default"
+    - "ConferenceRoom"
+    - "HomeAddress"
+    - "BusinessAddress"
+    - "GeoCoordinates"
+    - "StreetAddress"
+    - "Hotel"
+    - "Restaurant"
+    - "LocalBusiness"
+    - "PostalAddress"
+  Audience:
+    type: "string"
+    enum:
+    - "Public"
+    - "Internal"
+  HeroImage:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+        format: "uri"
+      alternateText:
+        type: "string"
