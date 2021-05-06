@@ -19,12 +19,12 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
         public async Task<IEnumerable<PublicMCCEventLite>> GetPublicEvents(bool includePastEvents)
         {
-            IEnumerable<MCCEvent> events = await _graphEventService.GetEvents(includePastEvents);
+            IEnumerable<Graph.Event> events = await _graphEventService.GetEvents(includePastEvents);
             List<PublicMCCEventLite> publicEvents = new List<PublicMCCEventLite>();
             foreach (var item in events)
             {
                 PublicMCCEventLite currentEvent = new PublicMCCEventLite();
-                currentEvent.fromMCCEvent(item);
+                //currentEvent.fromMCCEvent(item);
                 publicEvents.Add(currentEvent);
             }
             return publicEvents;
@@ -32,9 +32,9 @@ namespace Microsoft.CampusCommunity.EventEngine.Services
 
         public async Task<PublicMCCEvent> GetPublicEvent(string eventId)
         {
-            MCCEvent mccEvent = await _graphEventService.GetEvent(eventId);
+            Graph.Event graphEvent = await _graphEventService.GetEvent(eventId);
             PublicMCCEvent publicEvent = new PublicMCCEvent();
-            publicEvent.fromMCCEvent(mccEvent);
+            //publicEvent.fromMCCEvent(graphEvent);
             return publicEvent;
         }
     }

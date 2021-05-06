@@ -31,11 +31,11 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
 
         }
         [FunctionName("V1PublicEventsGetAll")]
-        public async Task<ActionResult<IEnumerable<PublicMCCEventLite>>> Run(
+        public async Task<ActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/public/events")] HttpRequest req,
             ILogger log)
         {
-            string includePastEventsString = null;
+           /* string includePastEventsString = null;
             Boolean includePastEvents = false;
 
             if (req.GetQueryParameterDictionary().TryGetValue("includePastEvents", out includePastEventsString))
@@ -47,7 +47,8 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
             }
             IEnumerable<PublicMCCEventLite> events = await _publicGraphEventService.GetPublicEvents(includePastEvents);
 
-            return new OkObjectResult(events);
+            return new OkObjectResult(events);*/
+            return new OkResult();
         }
     }
 }

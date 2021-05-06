@@ -32,5 +32,6 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Configuration
 
         public string AdminPrincipalUsername { get; set; }
 
+        
     }
 }

@@ -12,12 +12,13 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
     /// </summary>
     public interface IGraphEventService
     {
+        public static readonly string EVENTSCHEMAEXTENSIONID = "extbivy5l28_mccEventEngine";
         /// <summary>
         /// Get all MCC events stored in MS Graph.
         /// </summary>
         /// <param name="includePastEvents">Whether or not to fetch events that started in the past.</param>
         /// <returns>All MCC events that fulfill the filters.</returns>
-        Task<IEnumerable<MCCEvent>> GetEvents(Boolean includePastEvents);
+        Task<IEnumerable<Graph.Event>> GetEvents(Boolean includePastEvents);
 
         /// <summary>
         /// Delete a MCC event from MS Graph.
@@ -30,14 +31,14 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
         /// </summary>
         /// <param name="eventId">Is of the event to get.</param>
         /// <returns>The <c>MCCEvent</c> with matching <c>eventId</c>.</returns>
-        Task<MCCEvent> GetEvent(String eventId);
+       Task<Graph.Event> GetEvent(String eventId);
 
         /// <summary>
         /// Creates a new MCC event in MS Graph.
         /// </summary>
         /// <param name="newEvent">The event to create.</param>
         /// <returns>The event that was created.</returns>
-        Task<MCCEvent> CreateEvent(IEvent newEvent);
+        Task<Graph.Event> CreateEvent(CommastoEvent newEvent);
 
         /// <summary>
         /// Update properties of an existing MCC event.
@@ -45,7 +46,7 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces
         /// <param name="eventId">Id of the event to update.</param>
         /// <param name="eventWithChangedPropertiesOnly">An event that contains only the properties that are supposed to change.</param>
         /// <returns>An event containing all the updated properties.</returns>
-        Task<MCCEvent> UpdateEvent(string eventId, MCCEvent eventWithChangedPropertiesOnly);
+        Task<Graph.Event> UpdateEvent(string eventId, CommastoEvent eventWithChangedPropertiesOnly);
 
     }
 }

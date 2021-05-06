@@ -1,5 +1,7 @@
+using Microsoft.CampusCommunity.EventEngine.Infrastructure.Interfaces;
 using Microsoft.Graph;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -94,13 +96,23 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
         public OnlineMeetingInfo OnlineMeeting { get; set; }
        
         
-        override public void fromMCCEvent(MCCEvent wrappedEvent)
+        override public void fromGraphEvent(Graph.Event wrappedEvent)
         {
-            base.fromMCCEvent(wrappedEvent);
-            if(wrappedEvent.EventSchemaExtensionData != null)
+            base.fromGraphEvent(wrappedEvent);
+            if (wrappedEvent.AdditionalData != null)
             {
-                this.TitleImageUrl = wrappedEvent.EventSchemaExtensionData.TitleImageUrl;
+                Object additionalDataEvent = null;
+                if (wrappedEvent.AdditionalData.TryGetValue(IGraphEventService.EVENTSCHEMAEXTENSIONID, out additionalDataEvent))
+                {
+                    wrappedEvent.AdditionalData.Remove(IGraphEventService.EVENTSCHEMAEXTENSIONID);
+                   /* if (additionalDataEvent is JObject)
+                    {
+                        TitleImageUrl = ((JObject)additionalDataEvent).ToObject<EventSchemaExtension>().TitleImageUrl;
+                    }*/
+                }
             }
+
+           
             this.Attachments = wrappedEvent.Attachments;
             this.Body = wrappedEvent.Body;
             this.HasAttachments = wrappedEvent.HasAttachments;

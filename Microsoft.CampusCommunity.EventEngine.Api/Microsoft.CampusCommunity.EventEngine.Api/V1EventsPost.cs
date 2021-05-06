@@ -27,17 +27,17 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
         }
 
         [FunctionName("V1EventsPost")]
-        public async Task<ActionResult<MCCEvent>> Run(
+        public async Task<ActionResult<Microsoft.Graph.Event>> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/events")] HttpRequest req,
             ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var inputEvent = JsonConvert.DeserializeObject<IEvent>(requestBody);
+            var inputEvent = JsonConvert.DeserializeObject<CommastoEvent>(requestBody);
 
 
             try
             {
-                MCCEvent createdEvent = await _graphEventService.CreateEvent(inputEvent);
+                Microsoft.Graph.Event createdEvent = await _graphEventService.CreateEvent(inputEvent);
                 if (createdEvent.Id != null)
                 {
                     Uri uriToEvent = new Uri($"{req.Path}/{createdEvent.Id}", UriKind.Relative);

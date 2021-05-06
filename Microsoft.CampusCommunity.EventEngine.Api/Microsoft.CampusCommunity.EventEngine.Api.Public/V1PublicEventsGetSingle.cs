@@ -26,12 +26,13 @@ namespace Microsoft.CampusCommunity.EventEngine.Api
 
         }
         [FunctionName("V1PublicEventsGetSingle")]
-        public async Task<ActionResult<PublicMCCEvent>> Run(
+        public async Task<ActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/public/events/{eventId}")] HttpRequest req,
             ILogger log,
             String eventId)
         {
-           return await _publicGraphEventService.GetPublicEvent(eventId);
+            //return await _publicGraphEventService.GetPublicEvent(eventId);
+            return new OkResult();
         }
     }
 }

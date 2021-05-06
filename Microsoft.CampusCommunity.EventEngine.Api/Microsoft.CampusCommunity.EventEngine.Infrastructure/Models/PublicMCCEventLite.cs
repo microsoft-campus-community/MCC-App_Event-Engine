@@ -84,18 +84,15 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "end", Required = Required.Default)]
         public DateTimeTimeZone End { get; set; }
 
-        virtual public void fromMCCEvent(MCCEvent wrappedEvent)
-    {
-        
-        this.BodyPreview = wrappedEvent.BodyPreview;
-       
-        this.Id = wrappedEvent.Id;
-       
-        this.IsCancelled = wrappedEvent.IsCancelled;
-        this.Location = wrappedEvent.Location;
-        this.Locations = wrappedEvent.Locations;
+        virtual public void fromGraphEvent(Graph.Event wrappedEvent)
+        {
+            this.BodyPreview = wrappedEvent.BodyPreview;
+            this.Id = wrappedEvent.Id;
+            this.IsCancelled = wrappedEvent.IsCancelled;
+            this.Location = wrappedEvent.Location;
+            this.Locations = wrappedEvent.Locations;
             this.IsOnlineMeeting = wrappedEvent.IsOnlineMeeting;
-        this.Subject = wrappedEvent.Subject;
+            this.Subject = wrappedEvent.Subject;
             this.BodyPreview = wrappedEvent.BodyPreview;
             this.End = wrappedEvent.End;
             this.Id = wrappedEvent.Id;
@@ -109,5 +106,5 @@ namespace Microsoft.CampusCommunity.EventEngine.Infrastructure.Models
         }
     }
 
-   
+
 }
